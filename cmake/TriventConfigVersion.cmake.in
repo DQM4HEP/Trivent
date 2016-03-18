@@ -1,0 +1,15 @@
+##############################################################################
+# this file is parsed when FIND_PACKAGE is called with version argument
+#
+# @author Jan Engels, Desy IT
+# Modified for Trivent use by : R.Ete, IPNL
+##############################################################################
+
+
+SET( ${PACKAGE_FIND_NAME}_VERSION_MAJOR @Trivent_VERSION_MAJOR@ )
+SET( ${PACKAGE_FIND_NAME}_VERSION_MINOR @Trivent_VERSION_MINOR@ )
+SET( ${PACKAGE_FIND_NAME}_VERSION_PATCH @Trivent_VERSION_PATCH@ )
+
+INCLUDE( "@CMAKE_INSTALL_PREFIX@/cmake/MacroCheckPackageVersion.cmake" )
+CHECK_PACKAGE_VERSION( ${PACKAGE_FIND_NAME} @Trivent_VERSION@ )
+

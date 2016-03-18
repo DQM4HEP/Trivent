@@ -1,0 +1,31 @@
+#ifndef TriventConfig_H
+#define TriventConfig_H
+
+// version macros
+#define Trivent_MAJOR_VERSION @Trivent_VERSION_MAJOR@
+#define Trivent_MINOR_VERSION @Trivent_VERSION_MINOR@
+#define Trivent_PATCH_LEVEL @Trivent_VERSION_PATCH@
+
+#define Trivent_VERSION_STR "@Trivent_VERSION_MAJOR@.@Trivent_VERSION_MINOR@.@Trivent_VERSION_PATCH@"
+// for backward compatibility
+#define DQM4HEP_VERSION_STR "@Trivent_VERSION_MAJOR@.@Trivent_VERSION_MINOR@.@Trivent_VERSION_PATCH@"
+
+#define Trivent_VERSION_GE( MAJV , MINV , PLEV )  \
+     ( (Trivent_MAJOR_VERSION > MAJV) || ( (Trivent_MAJOR_VERSION == MAJV) && (Trivent_MINOR_VERSION > MINV) ) \
+  || ( (Trivent_MAJOR_VERSION == MAJV) && (Trivent_MINOR_VERSION == MINV) && (Trivent_PATCH_LEVEL >= PLEV) ) )
+
+// project source dir
+// useful for icons
+#define Trivent_DIR "@CMAKE_INSTALL_PREFIX@"
+// for backward compatibility
+#define DQM4HEP_DIR "@CMAKE_INSTALL_PREFIX@"
+
+
+#ifdef DQM4HEP_USE_ELOG
+#define DQM4HEP_ELOG_EXECUTABLE "@ELOG_EXECUTABLE@"
+#else
+#define DQM4HEP_ELOG_EXECUTABLE ""
+#endif
+
+
+#endif // TriventConfig_H

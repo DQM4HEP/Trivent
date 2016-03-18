@@ -1,0 +1,85 @@
+##############################################################################
+# cmake configuration file for Trivent
+#
+# requires:
+#   MacroCheckPackageLibs.cmake for checking package libraries
+#   MacroExportPackageDeps.cmake for exporting package dependencies
+#
+# returns following variables:
+#
+#   Trivent_FOUND      : set to TRUE if Trivent found
+#       if FIND_PACKAGE called with REQUIRED and COMPONENTS arguments
+#       Trivent_FOUND is only set to TRUE if ALL components are also found
+#       if REQUIRED is NOT set components may or may not be available
+#
+#   Trivent_ROOT       : path to this Trivent installation
+#   Trivent_VERSION    : package version
+#   Trivent_LIBRARIES  : list of Trivent libraries (NOT including COMPONENTS)
+#   Trivent_INCLUDE_DIRS  : list of paths to be used with INCLUDE_DIRECTORIES
+#   Trivent_LIBRARY_DIRS  : list of paths to be used with LINK_DIRECTORIES
+#   Trivent_COMPONENT_LIBRARIES      : list of Trivent component libraries
+#   Trivent_${COMPONENT}_FOUND       : set to TRUE or FALSE for each library
+#   Trivent_${COMPONENT}_LIBRARY     : path to individual libraries
+#   Trivent_${COMPONENT}_LIB_DEPENDS : individual library dependencies
+#
+# @author Jan Engels, Desy
+# Modified for Trivent use by : Remi Ete, IPNL
+##############################################################################
+
+SET( Trivent_ROOT "@CMAKE_INSTALL_PREFIX@" )
+SET( Trivent_VERSION "@Trivent_VERSION@" )
+
+
+# ---------- include dirs -----------------------------------------------------
+# do not store find results in cache
+SET( Trivent_INCLUDE_DIRS Trivent_INCLUDE_DIRS-NOTFOUND )
+MARK_AS_ADVANCED( Trivent_INCLUDE_DIRS )
+
+FIND_PATH( Trivent_INCLUDE_DIRS
+	NAMES TriventConfig.h
+	PATHS @CMAKE_INSTALL_PREFIX@/include/
+	NO_DEFAULT_PATH
+)
+
+
+
+# ---------- libraries --------------------------------------------------------
+INCLUDE( "@CMAKE_INSTALL_PREFIX@/cmake/MacroCheckPackageLibs.cmake" )
+
+# only standard libraries should be passed as arguments to CHECK_PACKAGE_LIBS
+# additional components are set by cmake in variable PKG_FIND_COMPONENTS
+# first argument should be the package name
+CHECK_PACKAGE_LIBS( Trivent Trivent )
+
+
+# ---------- dependencies -----------------------------------------------------
+INCLUDE( "@CMAKE_INSTALL_PREFIX@/cmake/MacroExportPackageDeps.cmake" )
+# exports following package dependencies (if set)
+# first argument of macro should be the package name
+SET( Trivent_DEPENDS_INCLUDE_DIRS  @Trivent_DEPENDS_INCLUDE_DIRS@ )
+SET( Trivent_DEPENDS_LIBRARY_DIRS  @Trivent_DEPENDS_LIBRARY_DIRS@ )
+SET( Trivent_DEPENDS_LIBRARIES  @Trivent_DEPENDS_LIBRARIES@ )
+EXPORT_PACKAGE_DEPENDENCIES( Trivent )
+
+
+
+# ---------- final checking ---------------------------------------------------
+INCLUDE( FindPackageHandleStandardArgs )
+# set Trivent_FOUND to TRUE if all listed variables are TRUE and not empty
+# Trivent_COMPONENT_VARIABLES will be set if FIND_PACKAGE is called with REQUIRED argument
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( Trivent DEFAULT_MSG Trivent_ROOT Trivent_INCLUDE_DIRS Trivent_LIBRARIES ${Trivent_COMPONENT_VARIABLES} )
+
+SET( Trivent_FOUND ${Trivent_FOUND} )
+
+
+
+# ---------- definitions ------------------------------------------------------
+IF( Trivent_FOUND )
+
+    IF( CMAKE_BUILD_TYPE STREQUAL "Debug" OR
+        CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" )
+        MARK_AS_ADVANCED( Trivent_DEFINITIONS )
+    ENDIF()
+
+ENDIF()
+
