@@ -29,6 +29,7 @@
 #ifndef UNIT_H
 #define UNIT_H
 
+// -- std headers
 #ifdef __APPLE__
 #include <_types.h>
 #include <_types/_uint8_t.h>
@@ -40,7 +41,6 @@
 #else
 #include <stdint.h>
 #endif
-
 #include <string>
 #include <set>
 
@@ -51,7 +51,8 @@ class Event;
 
 /** 
  *  @brief  Unit class
- *  		Base unit object class used in Trivent time clustering.
+ *
+ *  Base unit object class used in Trivent time clustering.
  */ 
 class Unit 
 {
@@ -59,6 +60,9 @@ class Unit
 public:
 	/**
 	 *  @brief  Constructor
+	 *
+	 *  @param  time the timestamp of the unit
+	 *  @param  pUserInput the user input to store
 	 */
 	Unit(uint64_t time, void *pUserInput);
 
@@ -73,11 +77,6 @@ public:
 	void *getUserInput() const;
 
 	/**
-	 *  @brief  Set inputs
-	 */
-	void set(uint64_t time, void *pUserInput);
-
-	/**
 	 *  @brief  Get the collection name in which the unit is registered
 	 */
 	const std::string &getCollectionName() const;
@@ -85,16 +84,18 @@ public:
 private:
 	/**
 	 *  @brief  Set the collection name in which the unit is registered
+	 *
+	 *  @param  collectionName the collection name in which the unit is stored
 	 */
 	void setCollectionName(const std::string &collectionName);
 
 private:
-	uint64_t                        m_time;
-	void                           *m_pUserInput;
-	std::string                     m_collectionName;
+	uint64_t                        m_time;                 ///< The user time stamp
+	void                           *m_pUserInput;           ///< The user input pointer
+	std::string                     m_collectionName;       ///< The collection name of the unit
 };
 
-typedef std::set < Unit * > UnitSet;
+typedef std::set <Unit*> UnitSet;
 
 } 
 

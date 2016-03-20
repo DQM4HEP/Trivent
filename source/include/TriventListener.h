@@ -50,16 +50,13 @@ public:
 
 	/**
 	 *  @brief  Call back method to process a reconstructed event by the trivent algorithm
+	 *
+	 *  @param  pReconstructedEvent a Trivent reconstructed event
 	 */
 	virtual void processReconstructedEvent(const Event *const pReconstructedEvent) = 0;
-
-	/**
-	 *  @brief  Call back method to process a rejected event by the trivent algorithm
-	 */
-	virtual void processRejectedEvent(const Event *const pRejectedEvent) = 0;
 };
 
-typedef std::set< TriventListener * >  TriventListenerSet;
+typedef std::set<TriventListener*>  TriventListenerSet;
 
 }
 

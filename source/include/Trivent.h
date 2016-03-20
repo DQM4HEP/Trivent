@@ -43,9 +43,11 @@
 #endif
 #include <string>
 #include <set>
+#include <map>
 
 // -- trivent headers
 #include "TriventListener.h"
+#include "Unit.h"
 
 namespace trivent
 {
@@ -57,6 +59,8 @@ class Event;
  */ 
 class Trivent 
 {
+	typedef std::map<uint64_t, UnitSet>  TimeSpectrum;
+
 public:
 	/**
 	 *  @brief Parameters class
@@ -70,10 +74,12 @@ public:
 		Parameters();
 
 	public:
-		uint64_t                       m_timeWindow;
-		uint32_t                       m_minPeakSize;
+		uint64_t                         m_timeWindow;             ///< The time window around a bin to look
+		uint32_t                         m_minPeakSize;            ///< The minimum peak size to consider
+		uint32_t                         m_minElements;            ///< The minimum number of unit elements for all collections
+		uint32_t                         m_maxElements;            ///< The maximum number of unit elements for all collections
 
-		std::set<std::string>          m_maskCollectionNames;
+		std::set<std::string>            m_maskCollectionNames;    ///< The collection names to mask during processing
 	};
 
 public:
@@ -89,16 +95,22 @@ public:
 
 	/**
 	 *  @brief  Initialize the trivent algorithm with parameters
+	 *
+	 *  @param  parameters the input parameters needed for the Trivent algorithm
 	 */
 	void init(const Parameters &parameters);
 
 	/**
 	 *  @brief  Add a Trivent listener
+	 *
+	 *  @param  pListener a Trivent listener
 	 */
 	void addListener(TriventListener *pListener);
 
 	/**
 	 *  @brief  Remove a Trivent listener
+	 *
+	 *  @param  pListener a Trivent listener
 	 */
 	void removeListener(TriventListener *pListener);
 
@@ -107,18 +119,79 @@ public:
 	 *          Split the event in different sub events by
 	 *          clustering them within time peaks.
 	 *          Each time an event is found, listeners are notified
+	 *
+	 *  @param  inputEvent a user input event
 	 */
 	virtual void processEvent(const Event &inputEvent);
 
 private:
-	bool                             m_initialized;
-	TriventListenerSet               m_listeners;
+	/**
+	 *  @brief  Build the time spectrum from the input unit set
+	 *
+	 *  @param  unitSet the input unit set to build the time spectrum
+	 *  @param  timeSpectrum the time spectrum to fill
+	 */
+	void getTimeSpectrum(const UnitSet &inputUnits, TimeSpectrum &timeSpectrum);
+
+	/**
+	 *  @brief  Get the initial time of the time spectrum
+	 *
+	 *  @param  timeSpectrum the time spectrum in which to find the intial time
+	 *  @param  initialBinIter the initial bin iterator to receive
+	 */
+	void getInitialTimeBin(const TimeSpectrum &timeSpectrum, TimeSpectrum::const_iterator &initialBinIter);
+
+	/**
+	 *  @brief  Find the next time spectrum peak
+	 *
+	 *  @param  timeSpectrum the input time spectrum
+	 *  @param  spectrumBin the previous time peak found, the next time time peak to receive
+	 */
+	void findNextSpectrumPeak(const TimeSpectrum &timeSpectrum, TimeSpectrum::const_iterator &spectrumBin);
+
+	/**
+	 *  @brief  Build an event at the identified time peak
+	 *
+	 *  @param  outputEvent the output event to fill
+	 *  @param  timeSpectrum the input time spectrum to get units
+	 *  @param  spectrumBin the peak bin iterator in time spectrum to build event from
+	 */
+	void buildEvent(Event &outputEvent, const TimeSpectrum &timeSpectrum, const TimeSpectrum::const_iterator &spectrumBin);
+
+	/**
+	 *  @brief  Add a set of units from the peak bin to the event
+	 *
+	 *  @param  outputEvent the event to fill
+	 *  @param  spectrumBin the spectrum peak bin containing the units to fill the event with
+	 */
+	void addUnitsToEvent(Event &outputEvent, const TimeSpectrum::const_iterator &spectrumBin);
+
+	/**
+	 *  @brief  Seek the spectrum bin for the next event to process
+	 *
+	 *  @param  timeSpectrum the input time spectrum
+	 *  @param  spectrumBin the current time peak bin, the next time peak bin to receive
+	 */
+	void seekBinForNextEvent(const TimeSpectrum &timeSpectrum, TimeSpectrum::const_iterator &spectrumBin);
+
+	/**
+	 *  @brief  Notify Trivent listeners that an event as been built
+	 *
+	 *  @param  outputEvent the reconstructed event to notify
+	 */
+	void notifyListeners(const Event &outputEvent);
+
+private:
+	bool                             m_initialized;            ///< Whether Trivent has been initialized
+	TriventListenerSet               m_listeners;              ///< The set of Trivent listeners
 
 	// algorithm parameters
-	uint64_t                         m_timeWindow;
-	uint32_t                         m_minPeakSize;
-	std::set<std::string>            m_maskCollectionNames;
-}; 
+	uint64_t                         m_timeWindow;             ///< The time window around a bin to look
+	uint32_t                         m_minPeakSize;            ///< The minimum peak size to consider
+	uint32_t                         m_minElements;            ///< The minimum number of unit elements for all collections
+	uint32_t                         m_maxElements;            ///< The maximum number of unit elements for all collections
+	std::set<std::string>            m_maskCollectionNames;    ///< The collection names to mask during processing
+};
 
 } 
 

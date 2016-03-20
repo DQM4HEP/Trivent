@@ -25,7 +25,7 @@
  * @copyright CNRS , IPNL
  */
 
-
+// -- trivent headers
 #include "Unit.h"
 
 namespace trivent
@@ -38,26 +38,28 @@ Unit::Unit(uint64_t time, void *pUserInput) :
 	/* nop */
 }
 
+//-------------------------------------------------------------------------------------------------
+
 uint64_t Unit::getTime() const
 {
 	return m_time;
 }
+
+//-------------------------------------------------------------------------------------------------
 
 void *Unit::getUserInput() const
 {
 	return m_pUserInput;
 }
 
-void Unit::set(uint64_t time, void *pUserInput)
-{
-	m_time = time;
-	m_pUserInput = pUserInput;
-}
+//-------------------------------------------------------------------------------------------------
 
 const std::string &Unit::getCollectionName() const
 {
 	return m_collectionName;
 }
+
+//-------------------------------------------------------------------------------------------------
 
 void Unit::setCollectionName(const std::string &collectionName)
 {

@@ -42,6 +42,11 @@ namespace trivent
 
 /** 
  *  @brief  Event class
+ *
+ *  Basic interface to store a user input event.
+ *  Trivent units are stored in different collections which can be
+ *  added using Event::addUnit() or Event::addUnits() methods.
+ *  Units can thus be accessed using Event::getUnits().
  */ 
 class Event 
 {
@@ -58,44 +63,65 @@ public:
 
 	/**
 	 *  @brief  Clear the event content
+	 *
+	 *  @param  deepClean whether to call delete on Trivent units
 	 */
 	void clear(bool deepClean = true);
 
 	/**
 	 *  @brief  Add a single unit to target collection
+	 *
+	 *  @param  collectionName the collection name in which to add the unit
+	 *  @param  pUnit the unit pointer to add
 	 */
 	void addUnit(const std::string &collectionName, Unit *pUnit);
 
 	/**
 	 *  @brief  Add multiple units to target collection
+	 *
+	 *  @param  collectionName the collection name in which to add the units
+	 *  @param  unitSet the unit list to add
 	 */
 	void addUnits(const std::string &collectionName, const UnitSet &unitSet);
 
 	/**
 	 *  @brief  Remove a single unit from the target collection
+	 *
+	 *  @param  collectionName the collection name in which to remove the unit
+	 *  @param  pUnit the unit pointer to remove
+	 *  @param  callDelete whether to call delete on removal
 	 */
 	void removeUnit(const std::string &collectionName, Unit *pUnit, bool callDelete = true);
 
 	/**
 	 *  @brief  Remove units from the target collection
+	 *
+	 *  @param  collectionName the collection name in which to remove the units
+	 *  @param  pUnit the unit list to remove
+	 *  @param  callDelete whether to call delete on removal
 	 */
 	void removeUnits(const std::string &collectionName, const UnitSet &unitSet, bool callDelete = true);
 
 	/**
 	 *  @brief  Get the unit list saved as the target collection name
+	 *
+	 *  @param  collectionName the collection name in which to get the units
+	 *  @param  unitSet the unit set to receive
 	 */
 	void getUnits(const std::string &collectionName, UnitSet &unitSet) const;
 
 	/**
 	 *  @brief  Get the available collection names
+	 *
+	 *  @return the list of available collections
 	 */
 	std::vector<std::string> getCollectionNames() const;
 
 private:
 	typedef std::map<const std::string, UnitSet> UnitCollectionMap;
 
-	UnitCollectionMap                    m_unitCollectionMap;
-}; 
+	UnitCollectionMap                    m_unitCollectionMap;   ///< The unit collection list map
+};
 
 } 
 

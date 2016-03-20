@@ -37,10 +37,14 @@ Event::Event()
 	/* nop */
 }
 
+//-------------------------------------------------------------------------------------------------
+
 Event::~Event()
 {
 	this->clear(true);
 }
+
+//-------------------------------------------------------------------------------------------------
 
 void Event::clear(bool deepClean)
 {
@@ -60,11 +64,15 @@ void Event::clear(bool deepClean)
 	m_unitCollectionMap.clear();
 }
 
+//-------------------------------------------------------------------------------------------------
+
 void Event::addUnit(const std::string &collectionName, Unit *pUnit)
 {
 	m_unitCollectionMap[collectionName].insert(pUnit);
 	pUnit->setCollectionName(collectionName);
 }
+
+//-------------------------------------------------------------------------------------------------
 
 void Event::addUnits(const std::string &collectionName, const UnitSet &inputUnitSet)
 {
@@ -77,6 +85,8 @@ void Event::addUnits(const std::string &collectionName, const UnitSet &inputUnit
 		(*iter)->setCollectionName(collectionName);
 	}
 }
+
+//-------------------------------------------------------------------------------------------------
 
 void Event::removeUnit(const std::string &collectionName, Unit *pUnit, bool callDelete)
 {
@@ -98,6 +108,8 @@ void Event::removeUnit(const std::string &collectionName, Unit *pUnit, bool call
 	if(callDelete)
 		delete pUnit;
 }
+
+//-------------------------------------------------------------------------------------------------
 
 void Event::removeUnits(const std::string &collectionName, const UnitSet &inputUnitSet, bool callDelete)
 {
@@ -124,6 +136,8 @@ void Event::removeUnits(const std::string &collectionName, const UnitSet &inputU
 	}
 }
 
+//-------------------------------------------------------------------------------------------------
+
 void Event::getUnits(const std::string &collectionName, UnitSet &unitSet) const
 {
 	UnitCollectionMap::const_iterator findIter = m_unitCollectionMap.find(collectionName);
@@ -133,6 +147,8 @@ void Event::getUnits(const std::string &collectionName, UnitSet &unitSet) const
 
 	unitSet.insert(findIter->second.begin(), findIter->second.end());
 }
+
+//-------------------------------------------------------------------------------------------------
 
 std::vector<std::string> Event::getCollectionNames() const
 {
@@ -146,7 +162,6 @@ std::vector<std::string> Event::getCollectionNames() const
 
 	return collectionNames;
 }
-
 
 } 
 
