@@ -61,10 +61,11 @@ public:
 	/**
 	 *  @brief  Constructor
 	 *
+	 *  @param  type the unit type
 	 *  @param  time the timestamp of the unit
 	 *  @param  pUserInput the user input to store
 	 */
-	Unit(uint64_t time, void *pUserInput);
+	Unit(const std::string &type, uint64_t time, void *pUserInput);
 
 	/**
 	 *  @brief  Get time
@@ -81,6 +82,11 @@ public:
 	 */
 	const std::string &getCollectionName() const;
 
+	/**
+	 *  @brief  Get the unit type
+	 */
+	const std::string &getType() const;
+
 private:
 	/**
 	 *  @brief  Set the collection name in which the unit is registered
@@ -93,6 +99,7 @@ private:
 	uint64_t                        m_time;                 ///< The user time stamp
 	void                           *m_pUserInput;           ///< The user input pointer
 	std::string                     m_collectionName;       ///< The collection name of the unit
+	std::string                     m_type;                 ///< The unit type
 };
 
 typedef std::set <Unit*> UnitSet;

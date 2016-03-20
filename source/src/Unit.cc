@@ -31,7 +31,8 @@
 namespace trivent
 {
 
-Unit::Unit(uint64_t time, void *pUserInput) :
+Unit::Unit(const std::string &type, uint64_t time, void *pUserInput) :
+		m_type(type),
 		m_time(time),
 		m_pUserInput(pUserInput)
 {
@@ -57,6 +58,13 @@ void *Unit::getUserInput() const
 const std::string &Unit::getCollectionName() const
 {
 	return m_collectionName;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+const std::string &Unit::getType() const
+{
+	return m_type;
 }
 
 //-------------------------------------------------------------------------------------------------
