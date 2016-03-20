@@ -1,5 +1,5 @@
 #######################################################
-# cmake file for building Trivent package
+# cmake file for building Trivent package - lcio binding
 # @author Eté Rémi , IPNL
 # Copyright (c) CNRS / IPNL
 #######################################################
@@ -14,12 +14,12 @@ ADD_DEFINITIONS("-Wno-long-long -Wreturn-type -Werror")
 # -------------------------------------------------
 # build the global library
 
-AUX_SOURCE_DIRECTORY( src SRC_FILES )
+AUX_SOURCE_DIRECTORY( src LC_SRC_FILES )
 
-ADD_SHARED_LIBRARY( ${PROJECT_NAME} ${SRC_FILES} )
+ADD_SHARED_LIBRARY( LC${PROJECT_NAME} ${LC_SRC_FILES} )
 
 INSTALL(
-        TARGETS ${PROJECT_NAME}
+        TARGETS LC${PROJECT_NAME}
         LIBRARY DESTINATION lib
 )
 
@@ -27,14 +27,4 @@ INSTALL(
 # install headers
 INSTALL_DIRECTORY( include DESTINATION . FILES_MATCHING PATTERN "*.h" )
 
-FIND_PACKAGE( LCIO )
 
-IF( LCIO_FOUND )
-	
-	INCLUDE_DIRECTORIES( ${LCIO_INCLUDE_DIRS} )
-	LINK_LIBRARIES( ${LCIO_LIBRARIES} )
-	ADD_DEFINITIONS ( ${LCIO_DEFINITIONS} )
-
-	ADD_SUBDIRECTORY( lcio )
-	
-ENDIF()
