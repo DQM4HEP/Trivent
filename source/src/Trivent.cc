@@ -152,7 +152,7 @@ void Trivent::processEvent(const Event &inputEvent)
 		this->buildEvent(outputEvent, timeSpectrum, spectrumBin);
 
 		// notify listeners that an event has been reconstructed
-		this->notifyListeners(outputEvent);
+		this->notifyReconstructedEvent(outputEvent);
 
 		// seek the time spectrum iterator to next possible time peak
 		this->seekBinForNextEvent(timeSpectrum, spectrumBin);
@@ -324,7 +324,7 @@ void Trivent::seekBinForNextEvent(const TimeSpectrum &timeSpectrum, TimeSpectrum
 
 //-------------------------------------------------------------------------------------------------
 
-void Trivent::notifyListeners(const Event &outputEvent)
+void Trivent::notifyReconstructedEvent(const Event &outputEvent)
 {
 	for(TriventListenerSet::iterator iter = m_listeners.begin(), endIter = m_listeners.end() ;
 			endIter != iter ; ++iter)

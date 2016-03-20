@@ -49,6 +49,13 @@ public:
 	virtual ~TriventListener() {}
 
 	/**
+	 *  @brief  Notify when an user input event is going to be processed
+	 *
+	 *  @param  the user input event to process
+	 */
+	virtual void startProcessingInputEvent(const Event *const pInputEvent) = 0;
+
+	/**
 	 *  @brief  Call back method to process a reconstructed event by the trivent algorithm
 	 *
 	 *  @param  pReconstructedEvent a Trivent reconstructed event

@@ -175,11 +175,11 @@ private:
 	void seekBinForNextEvent(const TimeSpectrum &timeSpectrum, TimeSpectrum::const_iterator &spectrumBin);
 
 	/**
-	 *  @brief  Notify Trivent listeners that an event as been built
+	 *  @brief  Notify Trivent listeners that an event as been reconstructed
 	 *
 	 *  @param  outputEvent the reconstructed event to notify
 	 */
-	void notifyListeners(const Event &outputEvent);
+	void notifyReconstructedEvent(const Event &outputEvent);
 
 private:
 	bool                             m_initialized;            ///< Whether Trivent has been initialized
