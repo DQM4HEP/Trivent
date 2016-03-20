@@ -14,6 +14,13 @@ IF( DOXYGEN_FOUND )
     
     # directories to search for documentation
     SET( DOX_INPUT ../source/include/ ../source/src )
+    
+    FIND_PACKAGE( LCIO QUIET )
+    
+    IF( LCIO_FOUND )
+    	LIST( APPEND DOX_INPUT ../source/lcio/include/ ../source/lcio/src )
+    ENDIF()
+    
 
 
     # custom command to build documentation
