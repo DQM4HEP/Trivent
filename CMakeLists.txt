@@ -46,6 +46,12 @@ ADD_SUBDIRECTORY( source )
 # display some variables and write them to cache
 DISPLAY_STD_VARIABLES()
 
+FIND_PACKAGE( LCIO QUIET )
+
+IF( LCIO_FOUND )
+	SET( LCTrivent_LIBRARY LCTrivent )
+ENDIF()
+
 ###############################
 # generate and install following configuration files
 GENERATE_PACKAGE_CONFIGURATION_FILES( ${PROJECT_NAME}Config.cmake ${PROJECT_NAME}ConfigVersion.cmake ${PROJECT_NAME}LibDeps.cmake )
