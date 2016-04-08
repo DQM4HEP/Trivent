@@ -29,6 +29,53 @@
 #ifndef TRIVENT_H
 #define TRIVENT_H
 
+/**
+ *
+\mainpage Trivent repository on <a href="https://github.com/DQM4HEP/Trivent">GitHub</a>
+
+<b> Trivent : A time clustering algorithm </b> <br/>
+
+<b>Trivent</b> is an algorithm used to split trigger event that contains many other sub-events.
+It basically builds a time spectrum of your input event and cluster inputs into sub event structure where time peaks are found.
+
+The base class of the framework is trivent::Trivent that perform the algorithm using its own event structure trivent::Event.
+The base unit of an event is called trivent::Unit which contains :
+<ul>
+	<li> the time stamp of the unit </li>
+	<li> the collection name of the unit </li>
+	<li> a user input void pointer to map a user input object </li>
+</ul>
+
+A <a href="http://lcio.desy.de/">LCIO</a> binding is provided with helper functions to encode/decode the base Trivent Event structure.
+
+Here an example on how to process an LCevent with the RawCalorimeterHit class from LCIO :
+
+@code
+	EVENT::LCEvent *pLCEvent = new EVENT::LCEvent();
+
+	// ...
+	// fill the event with raw calorimeter hits
+	// ...
+
+	// create a Trivent instance and parameters
+	trivent::Trivent trivent;
+	trivent::Trivent::Parameters parameters;
+	parameters.m_timeWindow = 3;
+
+	// initialize trivent
+	trivent.init(parameters);
+
+	// add the raw calorimeter hit collection from the LCEvent
+	// into the trivent Event structure
+	trivent::Event triventEvent;
+	trivent::LCTrivent::addCollection<EVENT::RawCalorimeterHit, int, &EVENT::RawCalorimeterHit::getTimeStamp>( pLCEvent , "MyRawHitCollection" , triventEvent );
+
+	// process the event
+	trivent.processEvent(triventEvent);
+@endcode
+
+*/
+
 // -- std headers
 #ifdef __APPLE__
 #include <_types.h>
