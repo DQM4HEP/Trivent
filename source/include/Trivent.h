@@ -173,6 +173,13 @@ public:
 
 private:
 	/**
+	 *  @brief  Notify listeners of a start of event processing
+	 *  
+	 *  @param  pInputEvent the input event as provided by the user
+	 */
+	void notifyStartProcessing(const Event *const pInputEvent);
+
+	/**
 	 *  @brief  Build the time spectrum from the input unit set
 	 *
 	 *  @param  unitSet the input unit set to build the time spectrum

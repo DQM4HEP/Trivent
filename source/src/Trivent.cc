@@ -31,6 +31,8 @@
 
 // -- std headers
 #include <limits>
+#include <iostream>
+#include <iterator>
 
 namespace trivent
 {
@@ -124,6 +126,8 @@ void Trivent::processEvent(const Event &inputEvent)
 	if( allUnits.empty() )
 		return;
 
+	this->notifyStartProcessing(&inputEvent);
+
 	if( allUnits.size() < m_minElements || allUnits.size() > m_maxElements )
 		return;
 
@@ -140,12 +144,18 @@ void Trivent::processEvent(const Event &inputEvent)
 		return;
 
 	TimeSpectrum::const_iterator spectrumBin = initialBinIter;
+	TimeSpectrum::const_iterator beginIter = timeSpectrum.begin();
+
+	unsigned int iteration = 0;
 
 	// navigate along the time spectrum and find time peaks
 	while( 1 )
 	{
 		// look for next time peak
 		this->findNextSpectrumPeak(timeSpectrum, spectrumBin);
+
+		if( spectrumBin == timeSpectrum.end() )
+			break;
 
 		// build an event around the time peak
 		Event outputEvent;
@@ -163,6 +173,15 @@ void Trivent::processEvent(const Event &inputEvent)
 		if( spectrumBin == timeSpectrum.end() )
 			break;
 	}
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void Trivent::notifyStartProcessing(const Event *const pInputEvent)
+{
+	for(TriventListenerSet::iterator iter = m_listeners.begin(), endIter = m_listeners.end() ;
+			endIter != iter ; ++iter)
+		(*iter)->startProcessingInputEvent(pInputEvent);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -222,19 +241,22 @@ void Trivent::findNextSpectrumPeak(const Trivent::TimeSpectrum &timeSpectrum, Tr
 
 		while( 1 )
 		{
-			if( navigationIter->first - currentTime > m_timeWindow )
-			{
-				peakFound = false;
-				break;
-			}
-
-			navigationIter++;
-
 			if( navigationIter == timeSpectrum.end())
 			{
 				peakFound = false;
 				break;
 			}
+
+			if( navigationIter->first - currentTime < m_timeWindow && navigationIter->second.size() >= m_minPeakSize )
+			{
+				peakFound = false;
+				break;
+			}
+
+			if( navigationIter->first - currentTime > m_timeWindow )
+				break;
+
+			navigationIter++;
 		}
 
 		if( ! peakFound )
@@ -242,6 +264,8 @@ void Trivent::findNextSpectrumPeak(const Trivent::TimeSpectrum &timeSpectrum, Tr
 			nextPeakBin++;
 			continue;
 		}
+		else
+			break;
 	}
 
 	spectrumBin = nextPeakBin;
@@ -318,7 +342,7 @@ void Trivent::seekBinForNextEvent(const TimeSpectrum &timeSpectrum, TimeSpectrum
 	uint64_t currentTime = spectrumBin->first;
 	spectrumBin ++;
 
-	while( spectrumBin != timeSpectrum.end() || currentTime + m_timeWindow < spectrumBin->first )
+	while( spectrumBin != timeSpectrum.end() && currentTime + m_timeWindow < spectrumBin->first )
 		spectrumBin ++;
 }
 
@@ -328,9 +352,7 @@ void Trivent::notifyReconstructedEvent(const Event &outputEvent)
 {
 	for(TriventListenerSet::iterator iter = m_listeners.begin(), endIter = m_listeners.end() ;
 			endIter != iter ; ++iter)
-	{
 		(*iter)->processReconstructedEvent(&outputEvent);
-	}
 }
 
 } 
