@@ -30,6 +30,7 @@
 
 #include "IMPL/LCEventImpl.h"
 #include "IMPL/LCCollectionVec.h"
+#include "IMPL/LCFlagImpl.h"
 
 namespace trivent
 {
@@ -95,7 +96,11 @@ EVENT::LCEvent *LCTriventListener::createLCEvent(const Event *const pReconstruct
 		UnitSet unitSet;
 		pReconstructedEvent->getUnits( *colIter , unitSet );
 
+		IMPL::LCFlagImpl lcFlag;
+		lcFlag.setBit(EVENT::LCCollection::BITSubset);
+
 		IMPL::LCCollectionVec *pLCCollection = new IMPL::LCCollectionVec(findIter->second);
+		pLCCollection->setFlag( lcFlag.getFlag() );
 
 		for(UnitSet::iterator iter = unitSet.begin(), endIter = unitSet.end() ;
 				endIter != iter ; ++iter)
