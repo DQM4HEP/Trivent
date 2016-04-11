@@ -28,12 +28,24 @@
 
 #include "LCTrivent.h"
 
+// -- lcio headers
 #include "IMPL/LCEventImpl.h"
 #include "IMPL/LCCollectionVec.h"
 #include "IMPL/LCFlagImpl.h"
 
+// -- std headers
+#include <limits>
+
 namespace trivent
 {
+
+LCTriventListener::LCTriventListener() :
+		m_eventNumber(0)
+{
+	/* nop */
+}
+
+//-------------------------------------------------------------------------------------------------
 
 void LCTriventListener::startProcessingInputEvent(const Event *const pInputEvent)
 {
@@ -82,6 +94,12 @@ EVENT::LCEvent *LCTriventListener::createLCEvent(const Event *const pReconstruct
 		return 0;
 
 	IMPL::LCEventImpl *pLCEvent = new IMPL::LCEventImpl();
+	pLCEvent->setEventNumber(m_eventNumber);
+
+	if( m_eventNumber == std::numeric_limits<int>::max() )
+		m_eventNumber = 0;
+	else
+		m_eventNumber++;
 
 	std::vector<std::string> collectionNames = pReconstructedEvent->getCollectionNames();
 

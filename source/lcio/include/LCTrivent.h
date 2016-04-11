@@ -47,6 +47,11 @@ class LCTriventListener : public TriventListener
 {
 public:
 	/**
+	 *  @brief  Constructor
+	 */
+	LCTriventListener();
+
+	/**
 	 *  @brief  Notify when a LCEvent has been reconstructed
 	 *
 	 *  @param  pLCEvent a reconstructed LCEvent to process
@@ -69,6 +74,7 @@ private:
 
 private:
 	std::map<std::string, std::string>     m_collectionTypeMap;
+	int                                    m_eventNumber;
 };
 
 //-------------------------------------------------------------------------------------------------
