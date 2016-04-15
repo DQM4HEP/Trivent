@@ -129,7 +129,11 @@ void Trivent::processEvent(const Event &inputEvent)
 	this->notifyStartProcessing(&inputEvent);
 
 	if( allUnits.size() < m_minElements || allUnits.size() > m_maxElements )
+	{
+		std::string unitStr = allUnits.size() < m_minElements ? "Not enough " : "Too much ";
+		std::cout << unitStr << "to process an event ! Skipping event !" << std::endl;
 		return;
+	}
 
 	TimeSpectrum timeSpectrum;
 
@@ -141,7 +145,10 @@ void Trivent::processEvent(const Event &inputEvent)
 	this->getInitialTimeBin(timeSpectrum, initialBinIter);
 
 	if( initialBinIter == timeSpectrum.end() )
+	{
+		std::cout << "[Trivent] No initial time spectrum bn found ! Skipping event !" <<  std::endl;
 		return;
+	}
 
 	TimeSpectrum::const_iterator spectrumBin = initialBinIter;
 	TimeSpectrum::const_iterator beginIter = timeSpectrum.begin();
@@ -151,6 +158,10 @@ void Trivent::processEvent(const Event &inputEvent)
 	// navigate along the time spectrum and find time peaks
 	while( 1 )
 	{
+		std::cout << "[Trivent] Time spectrum iteration no " << iteration <<  std::endl;
+
+		iteration++;
+
 		// look for next time peak
 		this->findNextSpectrumPeak(timeSpectrum, spectrumBin);
 
