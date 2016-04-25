@@ -172,6 +172,9 @@ void Trivent::processEvent(const Event &inputEvent)
 		Event outputEvent;
 		this->buildEvent(outputEvent, timeSpectrum, spectrumBin);
 
+		outputEvent.setUserEvent( inputEvent.getUserEvent() );
+		outputEvent.setTimeStamp( spectrumBin->first );
+
 		// notify listeners that an event has been reconstructed
 		this->notifyReconstructedEvent(outputEvent);
 

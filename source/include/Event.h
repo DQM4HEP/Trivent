@@ -62,6 +62,31 @@ public:
 	~Event();
 
 	/**
+	 *  @brief  Set the user event. Can be retrieve using getUserEvent()
+	 *
+	 *  @param  pUserEvent the user event provided as a void pointer
+	 */
+	void setUserEvent(void *pUserEvent);
+
+	/**
+	 *  @brief  Get the user event as a void pointer
+	 */
+	void *getUserEvent() const;
+
+	/**
+	 *  @brief  Set the time stamp of this event.
+	 *  Set by Trivent algorithm as the main peak time stamp.
+	 *
+	 *  @param  timeStamp  the time stamp
+	 */
+	void setTimeStamp(uint64_t timeStamp);
+
+	/**
+	 *  @brief  Get the reconstructed time stamp by the trivent algorithm
+	 */
+	uint64_t getTimeStamp() const;
+
+	/**
 	 *  @brief  Clear the event content
 	 *
 	 *  @param  deepClean whether to call delete on Trivent units
@@ -121,6 +146,8 @@ private:
 	typedef std::map<const std::string, UnitSet> UnitCollectionMap;
 
 	UnitCollectionMap                    m_unitCollectionMap;   ///< The unit collection list map
+	void                                *m_pUserEvent;
+	uint64_t                             m_timeStamp;
 };
 
 } 

@@ -32,7 +32,9 @@
 namespace trivent
 {
 
-Event::Event() 
+Event::Event() :
+		m_pUserEvent(NULL),
+		m_timeStamp(0)
 {
 	/* nop */
 }
@@ -42,6 +44,34 @@ Event::Event()
 Event::~Event()
 {
 	this->clear(true);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void Event::setUserEvent(void *pUserEvent)
+{
+	m_pUserEvent = pUserEvent;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void *Event::getUserEvent() const
+{
+	return m_pUserEvent;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void Event::setTimeStamp(uint64_t timeStamp)
+{
+	m_timeStamp = timeStamp;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+uint64_t Event::getTimeStamp() const
+{
+	return m_timeStamp;
 }
 
 //-------------------------------------------------------------------------------------------------
