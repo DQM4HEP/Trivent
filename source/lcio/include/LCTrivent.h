@@ -59,21 +59,20 @@ public:
 	virtual void processReconstructedEvent(EVENT::LCEvent *pLCEvent) = 0;
 
 private:
-	void startProcessingInputEvent(const Event *const pInputEvent);
+	void startProcessingInputEvent(const Event *const pInputEvent) { /* nop */ }
 	void processReconstructedEvent(const Event *const pReconstructedEvent);
-
-	/**
-	 *  @brief  Store the collection type <-> name in a map for event post processing
-	 */
-	void storeCollectionTypeMap(const Event *const pInputEvent);
 
 	/**
 	 *  @brief  Create an LCEvent from the trivent reconstructed event
 	 */
 	EVENT::LCEvent *createLCEvent(const Event *const pReconstructedEvent);
 
+	/**
+	 *  @brief  Copy all parameters from input parameters to target parameters
+	 */
+	static void copyLCParameters( const EVENT::LCParameters &inputParameters , EVENT::LCParameters &targetParameters );
+
 private:
-	std::map<std::string, std::string>     m_collectionTypeMap;
 	int                                    m_eventNumber;
 };
 
