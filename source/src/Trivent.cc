@@ -158,8 +158,6 @@ void Trivent::processEvent(const Event &inputEvent)
 	// navigate along the time spectrum and find time peaks
 	while( 1 )
 	{
-		std::cout << "[Trivent] Time spectrum iteration no " << iteration <<  std::endl;
-
 		iteration++;
 
 		// look for next time peak
