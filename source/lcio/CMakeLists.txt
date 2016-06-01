@@ -25,7 +25,20 @@ INSTALL(
 )
 
 # -------------------------------------------------
+# build the lc_trivent binary
+
+ADD_EXECUTABLE( lc_trivent main/lc_trivent.cc )
+TARGET_LINK_LIBRARIES( lc_trivent LC${PROJECT_NAME} )
+
+INSTALL(
+        TARGETS lc_trivent
+        RUNTIME DESTINATION bin
+)
+
+# -------------------------------------------------
 # install headers
 INSTALL_DIRECTORY( include DESTINATION . FILES_MATCHING PATTERN "*.h" )
+
+
 
 
