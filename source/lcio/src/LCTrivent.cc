@@ -55,6 +55,8 @@ void LCTriventListener::processReconstructedEvent(const Event *const pReconstruc
 		return;
 
 	this->processReconstructedEvent( pLCEvent );
+	this->postProcessEvent( pLCEvent );
+
 	delete pLCEvent;
 }
 
@@ -87,11 +89,8 @@ EVENT::LCEvent *LCTriventListener::createLCEvent(const Event *const pReconstruct
 		UnitSet unitSet;
 		pReconstructedEvent->getUnits( *colIter , unitSet );
 
-		IMPL::LCFlagImpl lcFlag;
-		lcFlag.setBit(EVENT::LCCollection::BITSubset);
-
 		IMPL::LCCollectionVec *pLCCollection = new IMPL::LCCollectionVec( pOriginalLCCollection->getTypeName() );
-		pLCCollection->setFlag( lcFlag.getFlag() );
+		pLCCollection->setFlag( pOriginalLCCollection->getFlag() );
 
 		for(UnitSet::iterator iter = unitSet.begin(), endIter = unitSet.end() ;
 				endIter != iter ; ++iter)
@@ -118,6 +117,24 @@ EVENT::LCEvent *LCTriventListener::createLCEvent(const Event *const pReconstruct
 
 //-------------------------------------------------------------------------------------------------
 
+void LCTriventListener::postProcessEvent(EVENT::LCEvent *pLCEvent)
+{
+	// Since the original lc event own the objects stored in the collection,
+	// we need to clear all collections before to delete the rec event
+	// By doing this we avoid a seg fault on original event deletion
+
+	const std::vector<std::string> *pCollectionNames = pLCEvent->getCollectionNames();
+
+	for(std::vector<std::string>::const_iterator colIter = pCollectionNames->begin(), colEndIter = pCollectionNames->end() ;
+			colEndIter != colIter ; ++colIter)
+	{
+		IMPL::LCCollectionVec *pLCCollection = dynamic_cast<IMPL::LCCollectionVec *>(pLCEvent->getCollection( *colIter ));
+		pLCCollection->clear();
+	}
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void LCTriventListener::copyLCParameters( const EVENT::LCParameters &inputParameters , EVENT::LCParameters &targetParameters )
 {
 	EVENT::StringVec intKeys, floatKeys, stringKeys;
@@ -126,18 +143,24 @@ void LCTriventListener::copyLCParameters( const EVENT::LCParameters &inputParame
 	inputParameters.getFloatKeys( floatKeys );
 	inputParameters.getStringKeys( stringKeys );
 
-	EVENT::IntVec dummyInts;
-	EVENT::FloatVec dummyFloats;
-	EVENT::StringVec dummyStrings;
-
 	for(unsigned int i=0 ; i<intKeys.size() ; i++)
+	{
+		EVENT::IntVec dummyInts;
 		targetParameters.setValues( intKeys.at(i), inputParameters.getIntVals( intKeys.at(i) , dummyInts ) );
+	}
 
 	for(unsigned int i=0 ; i<floatKeys.size() ; i++)
+	{
+		EVENT::FloatVec dummyFloats;
 		targetParameters.setValues( floatKeys.at(i), inputParameters.getFloatVals( floatKeys.at(i) , dummyFloats ) );
+	}
 
 	for(unsigned int i=0 ; i<stringKeys.size() ; i++)
+	{
+		EVENT::StringVec dummyStrings;
 		targetParameters.setValues( stringKeys.at(i), inputParameters.getStringVals( stringKeys.at(i) , dummyStrings ) );
+	}
+
 }
 
 } 

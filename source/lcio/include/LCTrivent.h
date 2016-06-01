@@ -61,6 +61,7 @@ public:
 private:
 	void startProcessingInputEvent(const Event *const pInputEvent) { /* nop */ }
 	void processReconstructedEvent(const Event *const pReconstructedEvent);
+	void postProcessEvent(EVENT::LCEvent *pLCEvent);
 
 	/**
 	 *  @brief  Create an LCEvent from the trivent reconstructed event
