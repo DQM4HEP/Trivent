@@ -82,7 +82,7 @@ public:
 
 	~LCTriventWriter()
 	{
-		LC_TRIVENT_LOG( 1, "Number of reconstructed events : " << m_nProcessedEvent << std::endl);
+		LC_TRIVENT_LOG( 2, "Number of reconstructed events : " << m_nProcessedEvent << std::endl);
 		m_pLCWriter->close();
 		delete m_pLCWriter;
 	}
