@@ -131,7 +131,7 @@ void Trivent::processEvent(const Event &inputEvent)
 	if( allUnits.size() < m_minElements || allUnits.size() > m_maxElements )
 	{
 		std::string unitStr = allUnits.size() < m_minElements ? "Not enough " : "Too much ";
-		std::cout << unitStr << "to process an event ! Skipping event !" << std::endl;
+		std::cout << "[Trivent] " << unitStr << "to process an event ! Skipping event !" << std::endl;
 		return;
 	}
 
@@ -146,20 +146,21 @@ void Trivent::processEvent(const Event &inputEvent)
 
 	if( initialBinIter == timeSpectrum.end() )
 	{
-		std::cout << "[Trivent] No initial time spectrum bn found ! Skipping event !" <<  std::endl;
+		std::cout << "[Trivent] No initial time spectrum bin found ! Skipping event !" <<  std::endl;
 		return;
 	}
 
 	TimeSpectrum::const_iterator spectrumBin = initialBinIter;
-	TimeSpectrum::const_iterator beginIter = timeSpectrum.begin();
 
-	unsigned int iteration = 0;
+	for(TimeSpectrum::const_iterator iter = timeSpectrum.begin(), endIter = timeSpectrum.end() ;
+			endIter != iter ; ++iter)
+	{
+		std::cout << "Time = " << iter->first << " : binning = " << iter->second.size() << std::endl;
+	}
 
 	// navigate along the time spectrum and find time peaks
 	while( 1 )
 	{
-		iteration++;
-
 		// look for next time peak
 		this->findNextSpectrumPeak(timeSpectrum, spectrumBin);
 
@@ -249,13 +250,19 @@ void Trivent::findNextSpectrumPeak(const Trivent::TimeSpectrum &timeSpectrum, Tr
 		uint64_t currentTime = nextPeakBin->first;
 		Trivent::TimeSpectrum::const_iterator navigationIter = nextPeakBin;
 		navigationIter++;
+
+		// no more data ?
+		if( navigationIter == timeSpectrum.end() )
+			break;
+
 		bool peakFound = true;
 
 		while( 1 )
 		{
+			// no further peak found ? Then it's a peak !!!!!
 			if( navigationIter == timeSpectrum.end())
 			{
-				peakFound = false;
+				peakFound = true;
 				break;
 			}
 
@@ -354,8 +361,10 @@ void Trivent::seekBinForNextEvent(const TimeSpectrum &timeSpectrum, TimeSpectrum
 	uint64_t currentTime = spectrumBin->first;
 	spectrumBin ++;
 
-	while( spectrumBin != timeSpectrum.end() && currentTime + m_timeWindow < spectrumBin->first )
+	while( spectrumBin != timeSpectrum.end() && currentTime + m_timeWindow > spectrumBin->first )
+	{
 		spectrumBin ++;
+	}
 }
 
 //-------------------------------------------------------------------------------------------------
