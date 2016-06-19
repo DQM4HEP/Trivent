@@ -111,6 +111,15 @@ int main(int argc, char* argv[])
 	std::string cmdLineFooter = "Please report bug to <rete@ipnl.in2p3.fr>";
 	TCLAP::CmdLine *pCommandLine = new TCLAP::CmdLine(cmdLineFooter, ' ', Trivent_VERSION_STR);
 
+	TCLAP::ValueArg<unsigned int> nMaxEventsArg(
+				  "n"
+				 , "max-events"
+				 , "The maximum number of events to process"
+				 , false
+				 , 0
+				 , "string");
+	pCommandLine->add(nMaxEventsArg);
+
 	TCLAP::ValueArg<std::string> outputFileNameArg(
 				  "o"
 				 , "output-file"
@@ -168,7 +177,7 @@ int main(int argc, char* argv[])
 				 , "peak-size"
 				 , "The minimum peak size to consider a reconstructed event"
 				 , false
-				 , 7
+				 , 10
 				 , "unsigned int");
 	pCommandLine->add(peakSizeArg);
 
@@ -224,6 +233,9 @@ int main(int argc, char* argv[])
 	while( (pLCEvent = pLCReader->readNextEvent()) )
 	{
 		nProcessedEvents++;
+
+		if(nMaxEventsArg.getValue() <= nProcessedEvents)
+			break;
 
 		if(shouldExit)
 			break;
