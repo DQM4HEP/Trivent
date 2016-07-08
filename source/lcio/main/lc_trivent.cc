@@ -116,8 +116,8 @@ int main(int argc, char* argv[])
 				 , "max-events"
 				 , "The maximum number of events to process"
 				 , false
-				 , 0
-				 , "string");
+				  , std::numeric_limits<unsigned int>::max()
+				 , "unsigned int");
 	pCommandLine->add(nMaxEventsArg);
 
 	TCLAP::ValueArg<std::string> outputFileNameArg(
@@ -235,10 +235,16 @@ int main(int argc, char* argv[])
 		nProcessedEvents++;
 
 		if(nMaxEventsArg.getValue() <= nProcessedEvents)
+		  {
+		    std::cout << "Stopped after processing " << nProcessedEvents << " evts (on usr query)" << std::endl;
 			break;
+		  }
 
 		if(shouldExit)
+		  {
+		    std::cout << "Stopped after processing " << nProcessedEvents << " evts (exit flag)" << std::endl;
 			break;
+		  }
 
 		trivent::Event triventEvent;
 
