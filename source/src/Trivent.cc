@@ -152,12 +152,6 @@ void Trivent::processEvent(const Event &inputEvent)
 
 	TimeSpectrum::const_iterator spectrumBin = initialBinIter;
 
-	for(TimeSpectrum::const_iterator iter = timeSpectrum.begin(), endIter = timeSpectrum.end() ;
-			endIter != iter ; ++iter)
-	{
-		std::cout << "Time = " << iter->first << " : binning = " << iter->second.size() << std::endl;
-	}
-
 	// navigate along the time spectrum and find time peaks
 	while( 1 )
 	{
